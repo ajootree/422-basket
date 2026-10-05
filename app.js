@@ -5,7 +5,7 @@ const ROLES=[{name:'생산자',icon:'🌱',definition:'햇빛을 이용해 스�
 const LEVELS={easy:{name:'쉬움',fall:6,interval:1.6,goal:6,pool:5},normal:{name:'보통',fall:4.6,interval:1.1,goal:9,pool:8},hard:{name:'어려움',fall:3.5,interval:.85,goal:12,pool:8}};
 const SPECIES=[[["sunflower","해바라기"],["tree","나무"],["grass","풀"],["dandelion","민들레"],["clover","토끼풀"],["pine","소나무"],["rice","벼"],["foxtail","강아지풀"],["reed","갈대"],["lotus","연꽃"],["waterlily","수련"],["duckweed","개구리밥"],["hydrilla","검정말"],["cattail","부들"],["spirogyra","해캄"],["kelp","다시마"],["wakame","미역"],["sawtooth","상수리나무"],["coontail","붕어마름"],["oxalis","괭이밥"],["fleabane","개망초"],["cornus","산수유"],["celandine","애기똥풀"],["closterium","반달말"],["hijiki","톳"],["forsythia","개나리"],["orientaloak","갈참나무"],["ginkgo","은행나무"]],[["rabbit","토끼"],["deer","사슴"],["frog","청개구리"],["butterfly","나비"],["chipmunk","다람쥐"],["snail","달팽이"],["tiger","호랑이"],["vulture","독수리"],["grasshopper","메뚜기"],["sparrow","참새"],["hawk","참매"],["spider","거미"],["bee","꿀벌"],["dragonfly","잠자리"],["ricefish","송사리"],["waterbug","물장군"],["heron","왜가리"],["crab","꽃게"],["snake","누룩뱀"],["mole","두더지"],["greattit","박새"],["caterpillar","애벌레"],["weasel","족제비"],["ant","개미"],["crucian","붕어"],["earthworm","지렁이"],["stagbeetle","사슴벌레"],["pondsnail","우렁이"],["egret","백로"],["bulbul","직박구리"],["firetoad","무당개구리"],["riverSnail","다슬기"],["duck","오리"],["falcon","매"],["seaturtle","바다거북"],["gull","갈매기"],["jellyfish","해파리"],["dolphin","돌고래"],["mackerel","고등어"],["coral","산호"],["stingray","가오리"],["divingbeetle","물방개"]],[["mucor","털곰팡이"],["bacteria","분해 세균"],["shiitake","표고버섯"],["penicillium","푸른곰팡이"],["oyster","느타리버섯"],["button","양송이버섯"],["breadmold","빵곰팡이"],["enoki","팽이버섯"],["woodear","목이버섯"],["turkeytail","구름버섯"],["blackmold","검은곰팡이"]]];
 const state={mode:'rounds',segmentCount:0,switchAt:0,switchLeft:0,pendingRole:0,switches:0,level:'easy',round:0,status:'home',elapsed:0,count:0,wrong:0,missed:0,hearts:5,score:0,combo:0,maxCombo:0,items:[],effects:[],spawn:0,sequence:[],lastRole:-1,basket:.5,keys:new Set(),results:[],mistakes:new Map(),feedbackUntil:0,badUntil:0};
-const CARD={width:108,height:126,start:-130,span:138};
+const CARD={width:96,height:112,start:-116,span:124};
 let width=0,height=0,lastTime=0,soundOn=false,audio=null,pointerId=null;
 const field=$('#field'),basket=$('#basket'),dialog=$('#dialog');
 $('.progress-track').insertAdjacentHTML('beforebegin','<div class="arcade-bar"><div class="hearts" id="hearts" role="img" aria-label="하트 5개"></div><div class="arcade-stat"><small>총 점수</small><strong id="score">0</strong></div><div class="combo" id="combo">연속 담기 도전!</div></div>');
@@ -24,7 +24,18 @@ document.querySelectorAll('.level').forEach(button=>button.onclick=()=>{state.le
 function showDialog(content){state.keys.clear();pointerId=null;$('#overlay').hidden=false;dialog.innerHTML=content;$('#field').inert=true;$('.game-head').inert=true;$('.game-bottom').inert=true;dialog.focus();}
 function closeDialog(){$('#overlay').hidden=true;$('#field').inert=false;$('.game-head').inert=false;$('.game-bottom').inert=false;field.focus({preventScroll:true});lastTime=performance.now();}
 function resetItems(){state.items.forEach(i=>i.el.remove());state.items=[];state.effects.forEach(e=>e.el.remove());state.effects=[];$('#feedback').hidden=true;basket.classList.remove('good','bad');field.classList.remove('hit','danger');}
-function measure(){width=field.clientWidth;height=field.clientHeight;renderBasket();state.items.forEach(renderItem);}
+function measure(){
+ if(!field.clientWidth||!field.clientHeight)return;
+ width=field.clientWidth;height=field.clientHeight;
+ // Share the same responsive dimensions between drawing and collision geometry.
+ CARD.width=Math.round(Math.max(68,Math.min(96,width*.2)));
+ CARD.height=Math.round(CARD.width*1.17);CARD.start=-CARD.height-4;CARD.span=CARD.height+12;
+ field.style.setProperty('--card-width',CARD.width+'px');
+ field.style.setProperty('--card-height',CARD.height+'px');
+ field.style.setProperty('--photo-height',Math.round(CARD.width*.78)+'px');
+ field.style.setProperty('--card-font',Math.max(12,Math.min(15,CARD.width*.156))+'px');
+ renderBasket();state.items.forEach(renderItem);
+}
 function basketX(){return 54+state.basket*Math.max(0,width-108);}
 function renderBasket(){basket.style.transform=`translateX(${basketX()-54}px)`;}
 function renderItem(i){i.el.style.transform=`translate(${i.x*(width-CARD.width)}px,${CARD.start+i.y*(height+CARD.span)}px)`;}
