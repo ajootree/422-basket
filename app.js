@@ -8,7 +8,6 @@ const state={mode:'rounds',segmentCount:0,switchAt:0,switchLeft:0,pendingRole:0,
 const CARD={width:96,height:112,start:-116,span:124};
 let width=0,height=0,lastTime=0,soundOn=false,audio=null,pointerId=null;
 const field=$('#field'),basket=$('#basket'),dialog=$('#dialog');
-$('.progress-track').insertAdjacentHTML('beforebegin','<div class="arcade-bar"><div class="hearts" id="hearts" role="img" aria-label="하트 5개"></div><div class="arcade-stat"><small>총 점수</small><strong id="score">0</strong></div><div class="combo" id="combo">연속 담기 도전!</div></div>');
 field.insertAdjacentHTML('beforeend','<div class="speed-tag" id="speed-tag">속도 ×1.00</div>');
 $('.intro p').insertAdjacentHTML('afterend','<p class="rule-note">3라운드로 연습하고, 마라톤 최고점에 도전!</p>');
 $('[data-level="easy"] small').textContent='가볍게 도전 · 라운드마다 조금씩 빠르게';

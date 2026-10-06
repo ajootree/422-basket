@@ -6,3 +6,43 @@ img[src$="/hawk.jpg"],img[src$="/falcon.jpg"],img[src$="/stagbeetle.jpg"]{object
 .field{height:clamp(320px,56svh,590px)}
 @media(max-width:740px){.field{height:54svh}}
 @media(max-height:560px) and (orientation:landscape){.field{height:47svh;min-height:170px}}
+
+
+/* Give the playfield all remaining viewport height during a game. */
+.shell:has(#home[hidden]){height:100svh;display:flex;flex-direction:column}
+.shell:has(#home[hidden]) .brandbar{flex-shrink:0}
+.shell:has(#home[hidden]) .footer{display:none}
+.shell:has(#home:not([hidden])) .footer{display:block}
+#game:not([hidden]){display:flex;flex-direction:column;flex:1;min-height:0}
+#game .game-head,#game .progress-track,#game .game-bottom{flex-shrink:0}
+#game .field{height:auto;flex:1;min-height:170px}
+.game-title{flex-shrink:0}
+.game-title .hearts{margin-top:4px;font-size:18px;line-height:1.2}
+.hud{gap:18px}
+.hud-achievements{display:grid;gap:2px;min-width:180px;padding:8px 13px;border-radius:14px;background:#164c3e;color:#fff}
+.hud-achievements .arcade-stat{justify-content:space-between}
+.hud-achievements .arcade-stat strong{font-size:22px}
+.hud-achievements .combo{min-width:0;font-size:13px;text-align:right;white-space:nowrap}
+#pause{display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;min-height:44px}
+.pause-icon{display:inline-flex;gap:4px;flex-shrink:0}
+.pause-icon::before,.pause-icon::after{content:'';display:block;width:2px;height:14px;background:currentColor;border-radius:1px}
+@media(max-width:900px){
+ .game-head{flex-direction:column;align-items:stretch;gap:10px}
+ .game-title{display:grid;grid-template-columns:1fr auto;column-gap:12px;align-items:center}
+ .game-title .round-label,.game-title h1{grid-column:1}
+ .game-title .round-dots,.game-title .hearts{grid-column:2;grid-row:1 / span 2;margin:0}
+ .game-head h1{font-size:22px}
+ .hud{justify-content:flex-end;gap:20px}
+}
+@media(max-width:600px){
+ .game-head{padding:12px}
+ .game-head h1{font-size:20px}
+ .hud{display:grid;grid-template-columns:1fr 1fr auto;gap:10px 12px}
+ .hud-achievements{grid-column:1 / -1;grid-row:2;display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0;padding:7px 12px}
+ .hud-achievements .arcade-stat{gap:8px}
+ .hud-achievements .arcade-stat small{display:block}
+ .hud .stat{display:block;min-width:0}
+ .hud .stat span{margin-bottom:2px;font-size:12px}
+ .hud .stat strong{font-size:20px}
+ .game-head #pause{padding:10px;font-size:13px}
+}
